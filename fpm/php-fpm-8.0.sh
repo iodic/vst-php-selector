@@ -95,4 +95,9 @@ if [ -f "/etc/php/8.0/fpm/pool.d/www.conf" ]; then
     rm /etc/php/8.0/fpm/pool.d/www.conf
 fi
 
+if [ -f "$pool_file_81" ]; then
+    rm $pool_file_81
+    service php8.1-fpm restart
+fi
+
 exit 0

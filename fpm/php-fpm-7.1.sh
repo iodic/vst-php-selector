@@ -95,4 +95,9 @@ if [ -f "$pool_file_80" ]; then
     service php8.0-fpm restart
 fi
 
+if [ -f "$pool_file_81" ]; then
+    rm $pool_file_81
+    service php8.1-fpm restart
+fi
+
 exit 0
