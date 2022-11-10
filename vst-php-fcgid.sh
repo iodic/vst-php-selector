@@ -26,7 +26,7 @@ echo "You can enter multiple versions through 'space'."
 echo "Enter php version/versions(for example 5.6 7.0 7.1 7.2 7.3 7.4 8.0):"
 read -p ">" vers
 
-site_link="https://raw.githubusercontent.com/rikcage/vst-php-selector/main/fcgid"
+site_link="https://raw.githubusercontent.com/iodic/vst-php-selector/main/fcgid"
 
 for ver in $vers; do
 
