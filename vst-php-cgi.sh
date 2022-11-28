@@ -23,7 +23,7 @@ fi
 a2enmod cgi
 
 echo "You can enter multiple versions through 'space'."
-echo "Enter php version/versions(for example 5.6 7.0 7.1 7.2 7.3 7.4 8.0):"
+echo "Enter php version/versions(for example 5.6 7.0 7.1 7.2 7.3 7.4 8.0 8.1):"
 read -p ">" vers
 
 site_link="https://raw.githubusercontent.com/iodic/vst-php-selector/main/cgi"
