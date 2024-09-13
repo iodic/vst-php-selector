@@ -8,7 +8,7 @@ docroot="$5"
 
 pool_conf="[$2]
 
-listen = /run/php/php7.1-fpm-$2.sock
+listen = /run/php/php8.2-fpm-$2.sock
 listen.owner = $1
 listen.group = $1
 listen.mode = 0666
@@ -27,7 +27,7 @@ php_admin_value[upload_tmp_dir] = /home/$1/tmp
 php_admin_value[session.save_path] = /home/$1/tmp
 php_admin_value[open_basedir] = $5:/home/$1/tmp:/bin:/usr/bin:/usr/local/bin:/var/www/html:/tmp:/usr/share:/etc/phpmyadmin:/var/lib/phpmyadmin:/etc/roundcube:/var/log/roundcube:/var/lib/roundcube
 php_admin_value[upload_max_filesize] = 80M
-php_admin_value[max_execution_time] = 20
+php_admin_value[max_execution_time] = 30
 php_admin_value[post_max_size] = 80M
 php_admin_value[memory_limit] = 256M
 php_admin_value[sendmail_path] = \"/usr/sbin/sendmail -t -i -f info@$2\"
@@ -60,21 +60,9 @@ if [ -f "$pool_file_70" ]; then
     service php7.0-fpm restart
 fi
 
-write_file=0
-if [ ! -f "$pool_file_71" ]; then
-  write_file=1
-else
-  user_count=$(grep -c "/home/$1/" $pool_file_71)
-  if [ $user_count -eq 0 ]; then
-    write_file=1
-  fi
-fi
-if [ $write_file -eq 1 ]; then
-    echo "$pool_conf" > $pool_file_71
+if [ -f "$pool_file_71" ]; then
+    rm $pool_file_71
     service php7.1-fpm restart
-fi
-if [ -f "/etc/php/7.1/fpm/pool.d/www.conf" ]; then
-    rm /etc/php/7.1/fpm/pool.d/www.conf
 fi
 
 if [ -f "$pool_file_72" ]; then
@@ -102,9 +90,21 @@ if [ -f "$pool_file_81" ]; then
     service php8.1-fpm restart
 fi
 
-if [ -f "$pool_file_82" ]; then
-    rm $pool_file_82
+write_file=0
+if [ ! -f "$pool_file_82" ]; then
+  write_file=1
+else
+  user_count=$(grep -c "/home/$1/" $pool_file_82)
+  if [ $user_count -eq 0 ]; then
+    write_file=1
+  fi
+fi
+if [ $write_file -eq 1 ]; then
+    echo "$pool_conf" > $pool_file_82
     service php8.2-fpm restart
+fi
+if [ -f "/etc/php/8.2/fpm/pool.d/www.conf" ]; then
+    rm /etc/php/8.2/fpm/pool.d/www.conf
 fi
 
 exit 0

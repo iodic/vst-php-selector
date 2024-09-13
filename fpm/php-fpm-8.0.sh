@@ -48,6 +48,7 @@ pool_file_73="/etc/php/7.3/fpm/pool.d/$2.conf"
 pool_file_74="/etc/php/7.4/fpm/pool.d/$2.conf"
 pool_file_80="/etc/php/8.0/fpm/pool.d/$2.conf"
 pool_file_81="/etc/php/8.1/fpm/pool.d/$2.conf"
+pool_file_82="/etc/php/8.2/fpm/pool.d/$2.conf"
 
 if [ -f "$pool_file_56" ]; then
     rm $pool_file_56
@@ -99,6 +100,11 @@ fi
 if [ -f "$pool_file_81" ]; then
     rm $pool_file_81
     service php8.1-fpm restart
+fi
+
+if [ -f "$pool_file_82" ]; then
+    rm $pool_file_82
+    service php8.2-fpm restart
 fi
 
 exit 0
