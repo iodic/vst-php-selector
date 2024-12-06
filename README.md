@@ -49,6 +49,7 @@ $ apt install php7.4-apcu php7.4-mbstring php7.4-bcmath php7.4-cli php7.4-curl p
 $ apt install php8.0-apcu php8.0-mbstring php8.0-bcmath php8.0-cli php8.0-curl php8.0-gd php8.0-intl php8.0-mcrypt php8.0-mysql php8.0-soap php8.0-xml php8.0-xmlrpc php8.0-json php8.0-zip php8.0-memcache php8.0-memcached php8.0-ldap 
 $ apt install php8.1-apcu php8.1-mbstring php8.1-bcmath php8.1-cli php8.1-curl php8.1-gd php8.1-intl php8.1-mcrypt php8.1-mysql php8.1-soap php8.1-xml php8.1-xmlrpc php8.1-json php8.1-zip php8.1-memcache php8.1-memcached php8.1-ldap 
 $ apt install php8.2-apcu php8.2-mbstring php8.2-bcmath php8.2-cli php8.2-curl php8.2-gd php8.2-intl php8.2-mcrypt php8.2-mysql php8.2-soap php8.2-xml php8.2-xmlrpc php8.2-json php8.2-zip php8.2-memcache php8.2-memcached php8.2-ldap
+$ apt install php8.3-apcu php8.3-mbstring php8.3-bcmath php8.3-cli php8.3-curl php8.3-gd php8.3-intl php8.3-mcrypt php8.3-mysql php8.3-soap php8.3-xml php8.3-xmlrpc php8.3-json php8.3-zip php8.3-memcache php8.3-memcached php8.3-ldap
 ```
 
 For old version of Ubuntu
