@@ -1,9 +1,10 @@
 #!/bin/bash
+set -e
 
 # check root
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root"
-    exit 0
+    exit 1
 fi
 
 # check OS
@@ -17,7 +18,7 @@ elif [[ `cat /etc/os-release | grep ^ID=` == "ID=ubuntu" ]]; then
     add-apt-repository ppa:ondrej/php
 else    
     echo "This script must be run on Ubuntu or Debian"
-    exit 0
+    exit 1
 fi
 
 a2enmod proxy_fcgi setenvif
@@ -26,27 +27,55 @@ echo "You can enter multiple versions through 'space'."
 echo "Enter php version/versions(for example 5.6 7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2, 8.3):"
 read -p ">" vers
 
+# validate input
+if [[ -z "$vers" ]]; then
+    echo "Error: No PHP versions specified"
+    exit 1
+fi
+
 site_link="https://raw.githubusercontent.com/iodic/vst-php-selector/main/fpm"
 
 for ver in $vers; do
 
-    apt install -y php$ver php$ver-fpm php$ver-cgi
+    echo "Installing PHP $ver..."
+    
+    if ! apt install -y php$ver php$ver-fpm php$ver-cgi; then
+        echo "Error: Failed to install PHP $ver"
+        continue
+    fi
 
     a2enconf php$ver-fpm
 
-    if ! [ -d /home/admin/vst_install_backups/php$ver ]; then
-        if ! [ -d /home/admin/vst_install_backups ]; then
-            mkdir /home/admin/vst_install_backups
-        fi
-        mkdir /home/admin/vst_install_backups/php$ver
+    # Create backup directory
+    BACKUP_DIR="/home/admin/vst_install_backups/php$ver"
+    if ! [ -d "$BACKUP_DIR" ]; then
+        mkdir -p "$BACKUP_DIR"
     fi
-    cp -r /etc/php/$ver/ /root/vst_install_backups/php$ver/
-    rm -f /etc/php/$ver/fpm/pool.d/*
+    
+    # Backup existing config
+    if [ -d /etc/php/$ver/ ]; then
+        cp -r /etc/php/$ver/ "$BACKUP_DIR/"
+        rm -f /etc/php/$ver/fpm/pool.d/*
+    fi
 
-    wget $site_link/php-fpm-$ver.stpl -O /usr/local/vesta/data/templates/web/apache2/php-fpm-$ver.stpl
-    wget $site_link/php-fpm-$ver.tpl -O /usr/local/vesta/data/templates/web/apache2/php-fpm-$ver.tpl
-    wget $site_link/php-fpm-$ver.sh -O /usr/local/vesta/data/templates/web/apache2/php-fpm-$ver.sh
-    chmod a+x /usr/local/vesta/data/templates/web/apache2/php-fpm-$ver.sh
+    # Download templates with verification
+    TEMPLATE_DIR="/usr/local/vesta/data/templates/web/apache2"
+    if [ ! -d "$TEMPLATE_DIR" ]; then
+        echo "Error: Vesta template directory not found: $TEMPLATE_DIR"
+        continue
+    fi
+    
+    for file in php-fpm-$ver.stpl php-fpm-$ver.tpl php-fpm-$ver.sh; do
+        if wget -q "$site_link/$file" -O "$TEMPLATE_DIR/$file"; then
+            echo "Downloaded $file"
+        else
+            echo "Error: Failed to download $file"
+            continue 2
+        fi
+    done
+    
+    chmod a+x "$TEMPLATE_DIR/php-fpm-$ver.sh"
+    echo "PHP $ver installation completed"
 
 done
 
